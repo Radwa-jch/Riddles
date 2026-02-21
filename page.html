@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فوازير رمضان </title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d);
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    transition: background 0.5s ease;
+  }
+
+  .ramadan-decor {
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 2rem;
+  }
+
+  .container {
+    background-color: rgba(0,0,0,0.3);
+    padding: 30px 20px;
+    border-radius: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    max-width: 500px;
+    width: 100%;
+  }
+
+  h1 { margin-bottom: 20px; font-size: 2rem; text-shadow: 2px 2px 8px #000; }
+
+  #wheel-container {
+    margin: 20px auto;
+    position: relative;
+    width: 250px;
+    height: 250px;
+  }
+
+  #wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    background: conic-gradient(
+      red 0deg 36deg,
+      orange 36deg 72deg,
+      yellow 72deg 108deg,
+      green 108deg 144deg,
+      blue 144deg 180deg,
+      indigo 180deg 216deg,
+      violet 216deg 252deg,
+      pink 252deg 288deg,
+      cyan 288deg 324deg,
+      magenta 324deg 360deg
+    );
+    transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+
+  #pointer {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; 
+    height: 0; 
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 30px solid #fff;
+  }
+
+  #question {
+    margin: 20px 0;
+    font-size: 1.2rem;
+    min-height: 60px;
+    padding: 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition: all 0.3s ease, background 0.5s ease;
+  }
+
+  input {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: none;
+    width: 80%;
+    margin-bottom: 10px;
+  }
+
+  button {
+    background-color: #ff6b6b;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    margin: 5px;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+    background-color: #ff4c4c;
+  }
+
+  @media (max-width: 500px) {
+    h1 { font-size: 1.5rem; }
+    #question { font-size: 1rem; padding: 15px; }
+    button { padding: 12px 20px; font-size: 0.9rem; }
+    #wheel-container { width: 200px; height: 200px; }
+    input { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ramadan-decor">
+  🌙 ✨ 🕌 ✨ 🏮
+</div>
+
+<div class="container">
+  <h1>فوازير رمضان البرمجية</h1>
+  <div id="wheel-container">
+    <div id="pointer"></div>
+    <div id="wheel"></div>
+  </div>
+  <div id="question">اضغط على العجلة لتظهر لك فزورة!</div>
+  <input type="text" id="answer" placeholder="اكتب إجابتك هنا">
+  <div>
+    <button onclick="spinWheel()">اختر سؤال عشوائي</button>
+    <button onclick="checkAnswer()">تم</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+  "شيء موجود في كل بيت، يُضيء الليل ويبهج العيون، ما هو؟",
+  "ما هو الشيء الذي كلما أخذت منه يكبر؟",
+  "شيء يصنع من الماء والورق ويقرأه الكبير والصغير؟",
+  "أنا أطير بلا أجنحة وأبكي بلا عيون، ما أنا؟",
+  "شيء نراه مرة واحدة في السنة، لكنه لا يأتِ كل يوم؟",
+  "ما هو الشيء الذي له أسنان ولا يعض؟",
+  "شيء نأكله ولا نشربه، فما هو؟",
+  "شيء نراه في السماء ليلاً لكنه لا يلمس الأرض؟",
+  "شيء نسمعه ولا نراه، ما هو؟",
+  "أنا أخضر في الصيف وأصفر في الخريف، ما أنا؟",
+  "ما هي اللغة المستخدمة لإنشاء صفحات الويب؟",
+  "في البرمجة، ما نوع البيانات التي تخزن النصوص؟",
+  "أي لغة برمجة تستخدم بشكل أساسي لتطوير تطبيقات الأندرويد؟",
+  "ما هو رمز التعليقات في لغة Python؟",
+  "ما هو الاختصار الشائع لـ 'HyperText Markup Language'؟",
+  "أي عملية تقوم بها لإظهار نتيجة على الشاشة؟",
+  "ما نوع البيانات الذي يحتوي فقط على صحيح أو خطأ؟",
+  "أي لغة برمجة تُستخدم لإنشاء تطبيقات iOS؟",
+  "في البرمجة، ما هو 'loop' أو الحلقة؟",
+  "أي لغة برمجة مشهورة بتعلمها للمبتدئين بسبب سهولتها؟"
+];
+
+// الإجابات الصحيحة لكل سؤال
+const answers = [
+  "مصباح", "الحفرة", "كتاب", "سحابة", "أول يوم", "مشط",
+  "خبز", "قمر", "صوت", "شجرة",
+  "html", "string", "java", "#", "html", "print", "boolean", "swift", "تكرار", "python"
+];
+
+let wheel = document.getElementById('wheel');
+let questionDiv = document.getElementById('question');
+let answerInput = document.getElementById('answer');
+
+let currentIndex = -1;
+
+function spinWheel() {
+  answerInput.value = "";
+  document.body.style.background = "linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d)";
+  
+  let spins = Math.floor(Math.random() * 360) + 720;
+  wheel.style.transform = `rotate(${spins}deg)`;
+  
+  setTimeout(() => {
+    currentIndex = Math.floor(Math.random() * questions.length);
+    questionDiv.textContent = questions[currentIndex];
+  }, 4000);
+}
+
+function checkAnswer() {
+  if (currentIndex === -1) return alert("اضغط على العجلة لاختيار سؤال أولاً!");
+  
+  let userAnswer = answerInput.value.trim().toLowerCase();
+  let correctAnswer = answers[currentIndex].toLowerCase();
+
+  if (userAnswer === correctAnswer) {
+    questionDiv.textContent = "✅ إجابة صحيحة!";
+    document.body.style.background = "green";
+  } else {
+    questionDiv.textContent = "❌ حاول مرة أخرى!";
+    document.body.style.background = "red";
+  }
+
+  // إعادة ضبط العجلة بعد 2 ثواني
+  setTimeout(() => {
+    spinWheel();
+  }, 2000);
+}
+</script>
+
+</body>
+</html>
